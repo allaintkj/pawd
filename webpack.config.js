@@ -1,5 +1,5 @@
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 
@@ -33,16 +33,18 @@ module.exports = (env, argv) => {
 
     // Return webpack configuration object
     return {
-        bail: true,
-        devtool: devMode ? 'source-map' : '',
+        devtool: devMode ? 'source-map' : 'eval',
         entry: [
             './' + SCRIPT_DIR + JS_ENTRY,
             './' + SCSS_DIR + SCSS_ENTRY
         ],
         optimization: {
+            minimize: true,
             minimizer: [
-                new TerserPlugin(),
-                new OptimizeCSSAssetsPlugin({})
+                new TerserPlugin({
+                    extractComments: false
+                }),
+                new CssMinimizerPlugin()
             ]
         },
         output: {
@@ -73,10 +75,7 @@ module.exports = (env, argv) => {
                 include: path.resolve(__dirname, SCSS_DIR),
                 exclude: path.resolve(__dirname, 'node_modules/'),
                 use: [{
-                    loader: MiniCssExtractPlugin.loader,
-                    options: {
-                        sourceMap: devMode
-                    }
+                    loader: MiniCssExtractPlugin.loader
                 }, {
                     loader: 'css-loader',
                     options: {
@@ -86,10 +85,9 @@ module.exports = (env, argv) => {
                     loader: 'postcss-loader',
                     options: {
                         sourceMap: devMode,
-                        ident: 'postcss',
-                        plugins: () => [
-                            require('autoprefixer')
-                        ]
+                        postcssOptions: {
+                            plugins: ['autoprefixer']
+                        }
                     }
                 }, {
                     loader: 'sass-loader',
