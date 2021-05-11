@@ -1,5 +1,5 @@
 # pawd
-Pre-processor Assisted WordPress Development.  Based on Webpack v4.
+Pre-processor Assisted WordPress Development.  Now based on Webpack v5.
 
 # functionality
 Webpack bundler for WordPress theme development. Supports SCSS/SASS/ES6 transpiling and font/image loading.
@@ -20,7 +20,7 @@ Customize webpack.config.js to adjust entry and output filenames/placement to su
 
 ### To watch files and automatically transpile:
 ```
-npm run watch
+npm run dev
 ```
 
 ### Production build:
